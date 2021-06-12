@@ -48,19 +48,25 @@ public class PermissionManager {
         ActivityCompat.requestPermissions(activity, permissions, requestCode);
     }
 
-    void handlePermissionResult(Activity activity, int requestCode, String[] permissions,
-                                int[] grantResults) {
+    boolean handlePermissionResult(Activity activity, int requestCode, String[] permissions,
+                                   int[] grantResults) {
+        boolean isAllPermissionsGranted = true;
 
         if (grantResults.length > 0) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(activity, "Permission granted.", Toast.LENGTH_SHORT).show();
                 } else {
+                    isAllPermissionsGranted = false;
                     Toast.makeText(activity, "Permission denied.", Toast.LENGTH_SHORT).show();
+                    break;
                 }
             }
             //showPermissionRational(activity, requestCode);
+        } else {
+            isAllPermissionsGranted = false;
         }
+        return isAllPermissionsGranted;
     }
 
     private void showPermissionRational(Activity activity, int requestCode) {
