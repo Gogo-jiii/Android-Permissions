@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -59,28 +60,24 @@ public class PermissionManager {
                 } else {
                     isAllPermissionsGranted = false;
                     Toast.makeText(activity, "Permission denied.", Toast.LENGTH_SHORT).show();
+                    showPermissionRational(activity, requestCode, permissions, permissions[i]);
                     break;
                 }
             }
-            //showPermissionRational(activity, requestCode);
         } else {
             isAllPermissionsGranted = false;
         }
         return isAllPermissionsGranted;
     }
 
-    private void showPermissionRational(Activity activity, int requestCode) {
+    private void showPermissionRational(Activity activity, int requestCode, String[] permissions, String deniedPermission) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
                 showMessageOKCancel("You need to allow access to the permission(s)!",
                         new DialogInterface.OnClickListener() {
                             @Override public void onClick(DialogInterface dialog, int which) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    askPermissions(activity,
-                                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                                                    Manifest.permission.CAMERA},
-                                            requestCode);
+                                    askPermissions(activity, permissions, requestCode);
                                 }
                             }
                         });
